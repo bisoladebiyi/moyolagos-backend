@@ -1,5 +1,5 @@
 import { convertToRaw, EditorState } from "draft-js";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useState } from "react";
 import draftToHtml from "draftjs-to-html";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -8,22 +8,37 @@ import { db } from "../firebase";
 import Layout from "../components/layout";
 import Button from "../components/button";
 
+interface DataProp {
+  title: string;
+  description: string;
+}
+
 const NewBlog = () => {
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty()
   );
   const [data, setData] = useState<DataProp>({ title: "", description: "" });
+  const [ loading, setLoading ] = useState<boolean>(false)
+
   const sendToDb = async (data: DataProp) => {
-    try {
-      await addDoc(collection(db, "posts"), data);
-      alert("post succesfull");
-    } catch (err) {
-      throw err;
-    } finally {
-      setData({ title: "", description: "" });
-      setEditorState(EditorState.createEmpty())
-    }
+    setLoading(true)
+    if (data.title === "" || data.description === ""){
+      alert("Cannot post empty fields")
+      setLoading(false)
+    } else {
+      try {
+        await addDoc(collection(db, "posts"), data);
+        alert("post succesfull");
+      } catch (err) {
+        throw err;
+      } finally {
+        setData({ title: "", description: "" });
+        setEditorState(EditorState.createEmpty())
+        setLoading(false)
+      }
+    } 
   };
+
   return (
     <Layout currentPage="new post">
       <div className="mt-10">
@@ -35,7 +50,7 @@ const NewBlog = () => {
             className="rounded-sm"
               type="text"
               value={data.title}
-              onChange={(e) => setData({ ...data, title: e.target.value })}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData({ ...data, title: e.target.value })}
             />
           </div>
           <div className="mt-5 flex flex-col space-y-3">
@@ -56,7 +71,7 @@ const NewBlog = () => {
           </div>
         </div>
         <div className="flex space-x-4 mt-5">
-          <Button onClick={() => sendToDb(data)} type="fill" text="Save" />
+          <Button loading={loading} onClick={() => sendToDb(data)} type="fill" text="Save" />
           <Button onClick={() => {
              setData({ title: "", description: "" })
              setEditorState(EditorState.createEmpty())
@@ -66,10 +81,5 @@ const NewBlog = () => {
     </Layout>
   );
 };
-
-interface DataProp {
-  title: string;
-  description: string;
-}
 
 export default NewBlog;

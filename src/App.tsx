@@ -7,6 +7,7 @@ import {
 import './App.css';
 import AllPosts from './pages/allPosts';
 import NewBlog from './pages/newBlog';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 function App() {
   return (

@@ -9,7 +9,7 @@ const Layout:React.FC<Props> = ({ children, currentPage }) => {
   return (
     <>
     <Navbar currentPage={currentPage} />
-    <div className='px-16'>
+    <div className='px-5 sm:px-16'>
     {children}
     </div>
    
