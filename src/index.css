@@ -24,3 +24,8 @@ html, #root, .App, body, .container{
   font-size: 12px !important;
   color: rgb(107, 107, 107) !important;
 }
+.desc.page span{
+  font-size: 15px !important;
+  line-height: 28px !important;
+  color: rgb(107, 107, 107) !important;
+}

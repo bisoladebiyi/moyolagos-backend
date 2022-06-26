@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from "react-router-dom"
 
 interface NavProps {
-  currentPage: string
+  currentPage: string 
 }
 const Navbar: React.FC<NavProps> = ({ currentPage }) => {
   return (
